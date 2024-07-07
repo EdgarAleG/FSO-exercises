@@ -75,41 +75,58 @@ const Statistics = ({good = 0, neutral = 0, bad = 0}) => {
 }
 
 const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  
+  const anecdotes = [
+    'If it hurts, do it more often.',
 
-  const handleGood = () => {
-    const value1 = good + 1
-    setGood(value1)
+    'Adding manpower to a late software project makes it later!',
+
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+
+    'Premature optimization is the root of all evil.',
+
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+
+    'The only way to go fast, is to go well.'
+  ];
+
+  const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState([0,0,0,0,0,0,0,0])
+
+  const handleRandom = () => {
+    const numberRandom = Math.floor(Math.random() * anecdotes.length);
+    setSelected(numberRandom);
   }
 
-  const handleNeutral = () => {
-    const value1 = neutral + 1
-    setNeutral(value1)
+  const searchMaxValue = (arr) => {
+    let maxIndex = 0;
+    for(let i = 0; i < arr.length; i++) {
+      if(arr[i] >= arr[maxIndex])
+        maxIndex = i
+    }
+    return maxIndex;
   }
 
-  const handleBad = () => {
-    const value1 = bad + 1
-    setBad(value1)
+  const handleVote = () => {
+    const copy = [...points];
+    copy[selected] += 1;
+    setPoints(copy);
   }
+  const maxValue = searchMaxValue(points);
 
   return (
     <div className='container'>
-      <h1>Give Feedback</h1>
-      <Button handleCLick={ () => handleGood() } title={'Good'}/>
-      <Button handleCLick={ () => handleNeutral() } title={'Neutral'}/>
-      <Button handleCLick={ () => handleBad() } title={'Bad'}/>
+      <h1>Anecdote of the day</h1>
+      <p>{anecdotes[selected]} <br/> Has {points[selected]} votes </p>
 
-      <h2>Statics</h2>
+      <Button handleCLick={handleRandom} title={'Next Anedcote'}/>
+      <Button handleCLick={handleVote} title={'Vote'}/>
 
-      <Statistics
-        good={good}
-        neutral={neutral} 
-        bad={bad}
-      />
-      
+      <h2>Anecdote with most votes</h2>
+      <p>{anecdotes[maxValue]}</p>
     </div>
   )
 }
